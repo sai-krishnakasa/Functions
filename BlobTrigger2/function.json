@@ -1,0 +1,12 @@
+{
+  "scriptFile": "__init__.py",
+  "bindings": [
+    {
+      "name": "myblob",
+      "type": "blobTrigger",
+      "direction": "in",
+      "path": "my-blog-trigger-container/{name}",
+      "connection": "myblobstorageeacc_STORAGE"
+    }
+  ]
+}
