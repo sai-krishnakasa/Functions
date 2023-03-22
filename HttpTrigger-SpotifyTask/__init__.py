@@ -10,7 +10,7 @@ import os
 import random
 
 
-# Set the client ID and client secrety
+# Set the client ID and client secret key
 client_id = '60caf6ff44c841d5849076609d24b0fe'
 client_secret = 'cb2510f0cdb34085bde1f5e628856062'
 
