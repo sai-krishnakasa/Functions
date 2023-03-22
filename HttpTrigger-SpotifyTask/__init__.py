@@ -3,19 +3,54 @@ import requests
 import azure.functions as func
 from azure.storage.blob import BlockBlobService
 import requests
+from  base64 import b64encode
 import datetime
 import json
 import os 
 import random
 
+
+# Set the client ID and client secret
+client_id = '60caf6ff44c841d5849076609d24b0fe'
+client_secret = 'cb2510f0cdb34085bde1f5e628856062'
+
 def main(req: func.HttpRequest) -> func.HttpResponse:
+    # Spotify API endpoint for retrieving access token 
+    url = 'https://accounts.spotify.com/api/token'
+
+    # Base64-encoded string that contains the client ID and secret key
+    auth_header = b64encode(f"{client_id}:{client_secret}".encode()).decode()
+
+    # Parameters for the POST request
+    data = {
+        'grant_type': 'client_credentials'
+    }
+
+    # Headers for the POST request
+    headers = {
+        'Authorization': f'Basic {auth_header}',
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+
+    # Send the POST request to retrieve the access token
+    response = requests.post(url, data=data, headers=headers)
+
+    # Get the access token from the response JSON
+    access_token = response.json()['access_token']
+
+    headers = {
+    'Authorization': f'Bearer {access_token}'
+    }
+
+    # search for tracks with "Billie Jean" in the name
+    response = requests.get('https://api.spotify.com/v1/search',
+                            headers=headers,
+                            params={'q': 'Billie Jean', 'type': 'track'})
+    logging.info(response)
+    
     try:
         logging.info('Python HTTP trigger function processed a request.')
         id=req.params.get('id',None)
-        if id is not None:
-            response=requests.get(f"https://jsonplaceholder.typicode.com/todos/{id}")
-        else:
-            response=requests.get(f"https://jsonplaceholder.typicode.com/todos/{random.choice(range(100))}")
             
         # loads to convert a json to python datatype
         # json_response=json.loads(response.content.decode("utf-8"))
@@ -23,9 +58,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         # dumps to convert a python object back to json
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         filename="response"+"_"+str(timestamp)                                         
-        # with open(filename , "w") as f:
-        #     json.dump(json_response,f)
-        
+       
         # configuring the storage account
 
         # Parse the connection string from the environment variable.
@@ -44,6 +77,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         return func.HttpResponse(f"Response saved to file {filename} and uploaded to container {container_name}. and this the path to see the output https://myblobstorageeacc.blob.core.windows.net/mycontainer/{filename}")
     except Exception as e:
         logging.info(str(e))
+        logging.info(e,exc_info=True)
         return func.HttpResponse(f"An Error Occurred")
 
 
