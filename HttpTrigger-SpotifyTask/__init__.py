@@ -15,6 +15,7 @@ client_id = '60caf6ff44c841d5849076609d24b0fe'
 client_secret = 'cb2510f0cdb34085bde1f5e628856062'
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
+    # Is It Updated
     # Spotify API endpoint for retrieving access token 
     url = 'https://accounts.spotify.com/api/token'
 
