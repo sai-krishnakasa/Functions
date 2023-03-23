@@ -10,7 +10,8 @@ import os
 import random
 
 
-# Set the client ID and client secret key
+# Set the client ID and client secret 
+print(""" Set the client ID and client secret """)
 client_id = '60caf6ff44c841d5849076609d24b0fe'
 client_secret = 'cb2510f0cdb34085bde1f5e628856062'
 
@@ -75,7 +76,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         # Upload the JSON file to the container.
         block_blob_service.create_blob_from_bytes(container_name, filename, response.content)
 
-        return func.HttpResponse(f"Response saved to file {filename} and uploaded to container {container_name}. and this the path to see the output https://myblobstorageeacc.blob.core.windows.net/mycontainer/{filename}")
+        # return func.HttpResponse(f"Response saved to file {filename} and uploaded to container {container_name}. and this the path to see the output https://myblobstorageeacc.blob.core.windows.net/mycontainer/{filename}")
+        return func.HttpResponse(f"Response ")
     except Exception as e:
         logging.info(str(e))
         logging.info(e,exc_info=True)
